@@ -22,7 +22,7 @@ export const UserProvider = ({ children }) => {
           // You may want to validate the token on the server-side in a real-world scenario.
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
           axios
-            .get(`${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_USERS}/${userID}`)
+            .get(`${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_USERS_PATH}/${userID}`)
             .then((response) => {
               if (response.data && response.data.firstName) {
                 if (!user) setUser(response.data)

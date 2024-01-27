@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { useMemo, useState } from 'react'
 import { useUser } from '../../context/userContext'
 import {
   Container,

@@ -1,9 +1,5 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
-import { UserProvider, useUser } from './context/userContext'
-import Login from './components/Login'
-import Home from './components/Home'
-import NotFound from './components/NotFound'
-import Upsert from './components/Upsert'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { UserProvider } from './context/userContext'
 import RoutesWrapper from './RoutesWrapper'
 
 const App = () => {
