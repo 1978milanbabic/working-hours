@@ -3,16 +3,14 @@ import { UserProvider, useUser } from './context/userContext'
 import Login from './components/Login'
 import Home from './components/Home'
 import NotFound from './components/NotFound'
+import Upsert from './components/Upsert'
+import RoutesWrapper from './RoutesWrapper'
 
 const App = () => {
   return (
     <UserProvider>
       <Router>
-        <Routes>
-          <Route path='/' exact element={<Home />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
+        <RoutesWrapper />
       </Router>
     </UserProvider>
   )

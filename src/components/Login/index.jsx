@@ -10,7 +10,6 @@ const Login = ({ onLogin }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    console.log(e)
     let email = e.target[0].value
     let password = e.target[1].value
     try {

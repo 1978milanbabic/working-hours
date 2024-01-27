@@ -23,7 +23,13 @@ export const UserProvider = ({ children }) => {
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
           axios
             .get(`${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_USERS}/${userID}`)
-            .then((response) => setUser(response.data))
+            .then((response) => {
+              if (response.data && response.data.firstName) {
+                if (!user) setUser(response.data)
+              } else {
+                logout()
+              }
+            })
             .catch((error) => {
               console.error(error)
               logout()
