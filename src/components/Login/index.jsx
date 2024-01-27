@@ -22,37 +22,31 @@ const Login = ({ onLogin }) => {
 
   return (
     <>
-      {!user ? (
-        <>
-          <Header style={{ textAlign: 'center', position: 'absolute', top: '3rem', left: '0', width: '100%' }}>ConcordSoft Working Hours</Header>
-          <Container
-            style={{
-              height: 'calc(100vh)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Form onSubmit={handleLogin}>
-              <FormGroup>
-                <FormInput style={{ minWidth: '350px', marginBottom: '1rem' }} fluid label='Email' type='email' placeholder='Your email' />
-              </FormGroup>
-              <FormGroup>
-                <FormInput style={{ minWidth: '350px' }} fluid label='Password' type='password' placeholder='Your password' />
-              </FormGroup>
-              <br />
-              <Button primary>Submit</Button>
-              {error && (
-                <Message negative style={{ maxWidth: '350px' }}>
-                  <MessageHeader>{error}</MessageHeader>
-                </Message>
-              )}
-            </Form>
-          </Container>
-        </>
-      ) : (
-        <Navigate to='/' />
-      )}
+      <Header style={{ textAlign: 'center', position: 'absolute', top: '3rem', left: '0', width: '100%' }}>ConcordSoft Working Hours</Header>
+      <Container
+        style={{
+          height: 'calc(100vh)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Form onSubmit={handleLogin}>
+          <FormGroup>
+            <FormInput style={{ minWidth: '350px', marginBottom: '1rem' }} fluid label='Email' type='email' placeholder='Your email' />
+          </FormGroup>
+          <FormGroup>
+            <FormInput style={{ minWidth: '350px' }} fluid label='Password' type='password' placeholder='Your password' />
+          </FormGroup>
+          <br />
+          <Button primary>Submit</Button>
+          {error && (
+            <Message negative style={{ maxWidth: '350px' }}>
+              <MessageHeader>{error}</MessageHeader>
+            </Message>
+          )}
+        </Form>
+      </Container>
     </>
   )
 }
