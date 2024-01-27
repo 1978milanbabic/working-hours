@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import { useUser } from '../../context/userContext'
 import axios from 'axios'
 import { Button, Container, Form, FormGroup, FormInput, Header, Message, MessageHeader } from 'semantic-ui-react'
-import { Navigate } from 'react-router-dom'
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [error, setError] = useState(null)
-  const { user, login } = useUser()
+  const { login } = useUser()
 
   const handleLogin = async (e) => {
     e.preventDefault()
