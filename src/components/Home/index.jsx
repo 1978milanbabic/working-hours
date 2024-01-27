@@ -178,13 +178,27 @@ const Home = () => {
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell>Cell</TableCell>
-            <TableCell>Cell</TableCell>
-            <TableCell>Cell</TableCell>
-            <TableCell>Cell</TableCell>
-            <TableCell>Cell</TableCell>
-            <TableCell>Cell</TableCell>
-            <TableCell>Cell</TableCell>
+            <TableCell>
+              <Button>Dodaj</Button>
+            </TableCell>
+            <TableCell>
+              <Button>Dodaj</Button>
+            </TableCell>
+            <TableCell>
+              <Button>Dodaj</Button>
+            </TableCell>
+            <TableCell>
+              <Button>Dodaj</Button>
+            </TableCell>
+            <TableCell>
+              <Button>Dodaj</Button>
+            </TableCell>
+            <TableCell>
+              <Button>Dodaj</Button>
+            </TableCell>
+            <TableCell>
+              <Button>Dodaj</Button>
+            </TableCell>
           </TableRow>
         </TableBody>
         <TableFooter>
