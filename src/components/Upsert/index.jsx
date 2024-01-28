@@ -12,6 +12,7 @@ const Upsert = (props) => {
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [savedSchedules, setSavedSchedules] = useState([])
   const [clients, setClients] = useState()
+  const [summedHours, setSummedHours] = useState('')
 
   const dayNames = ['ponedeljak', 'utorak', 'sreda', 'cetvrtak', 'petak', 'subota', 'nedelja']
   let currentDayNumber = location.pathname.split('/')
@@ -44,7 +45,21 @@ const Upsert = (props) => {
         axios
           .get(`http://localhost:5000/api/default/${currentDayNumber}`)
           .then((resp) => {
-            setSavedSchedules(resp?.data?.returnDay || [])
+            let saved = resp?.data?.returnDay || []
+            setSavedSchedules(saved)
+            // calulate summed hours
+            if (saved && saved.length > 0) {
+              let hoursSum = 0
+              let minsSum = 0
+              saved.forEach((s) => {
+                if (s.uhours) hoursSum += s.uhours
+                if (s.umins) minsSum += s.umins
+              })
+              console.log(hoursSum, ' : ', minsSum)
+              setSummedHours(`${hoursSum} : ${minsSum < 10 ? '0' + minsSum : minsSum}`)
+            } else {
+              setSummedHours(`0 : 00`)
+            }
           })
           .catch((err) => console.log(err))
       }, 1000)
@@ -60,6 +75,9 @@ const Upsert = (props) => {
       })
       .catch((err) => console.log(err))
   }
+
+  // edit an event
+  const handleEditEvent = (id) => {}
 
   // additional styles
   const smallRowStyle = { padding: '0.5rem 0' }
@@ -141,7 +159,7 @@ const Upsert = (props) => {
                   </GridColumn>
                   <GridColumn width={16}>
                     <br />
-                    <Button>Edit</Button>
+                    <Button onClick={() => handleEditEvent(sc.eventID)}>Edit</Button>
                     <Button onClick={() => handleRemoveEvent(sc.eventID)}>Remove</Button>
                   </GridColumn>
                 </GridRow>
@@ -158,7 +176,7 @@ const Upsert = (props) => {
           </Button>
         </Segment>
         <Segment attached>
-          <Header>Ukupno sati: {}</Header>
+          <Header>Ukupno vreme: &emsp;{summedHours}</Header>
         </Segment>
         <Segment attached='bottom'>
           <Button primary onClick={() => navigate('/')}>
