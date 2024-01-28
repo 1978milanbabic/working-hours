@@ -60,57 +60,57 @@ const CreateEventModal = ({ open, closeModal, selectedDayForModal }) => {
   const taskOptions = [
     {
       key: 'Development',
-      value: 'Development',
+      value: 'development',
       text: 'Development',
     },
     {
       key: 'Dizajn',
-      value: 'Dizajn',
+      value: 'dizajn',
       text: 'Dizajn',
     },
     {
       key: 'App Development',
-      value: 'App Development',
+      value: 'app development',
       text: 'App Development',
     },
     {
       key: 'Sastanak',
-      value: 'Sastanak',
+      value: 'sastanak',
       text: 'Sastanak',
     },
     {
       key: 'Testing',
-      value: 'Testing',
+      value: 'testing',
       text: 'Testing',
     },
     {
       key: 'Manager',
-      value: 'Manager',
+      value: 'manager',
       text: 'Manager',
     },
     {
       key: 'Marketing',
-      value: 'Marketing',
+      value: 'marketing',
       text: 'Marketing',
     },
     {
       key: 'Support',
-      value: 'Support',
+      value: 'support',
       text: 'Support',
     },
     {
       key: 'Akademija',
-      value: 'Akademija',
+      value: 'akademija',
       text: 'Akademija',
     },
     {
       key: 'Mentorstvo',
-      value: 'Mentorstvo',
+      value: 'mentorstvo',
       text: 'Mentorstvo',
     },
     {
       key: 'Ostalo',
-      value: 'Ostalo',
+      value: 'ostalo',
       text: 'Ostalo',
     },
   ]
@@ -167,7 +167,7 @@ const CreateEventModal = ({ open, closeModal, selectedDayForModal }) => {
       </ModalContent>
       <ModalActions>
         <Button primary>Submit</Button>
-        <Button>Cancel</Button>
+        <Button onClick={() => closeModal()}>Cancel</Button>
       </ModalActions>
     </Modal>
   )
