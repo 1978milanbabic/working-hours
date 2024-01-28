@@ -51,6 +51,16 @@ const Upsert = (props) => {
     }
   }, [openCreateModal, clients])
 
+  // remove an event
+  const handleRemoveEvent = (id) => {
+    axios
+      .patch(`http://localhost:5000/api/default/`, { id, currentDayNumber })
+      .then((resp) => {
+        window.location.reload()
+      })
+      .catch((err) => console.log(err))
+  }
+
   // additional styles
   const smallRowStyle = { padding: '0.5rem 0' }
 
@@ -132,7 +142,7 @@ const Upsert = (props) => {
                   <GridColumn width={16}>
                     <br />
                     <Button>Edit</Button>
-                    <Button>Remove</Button>
+                    <Button onClick={() => handleRemoveEvent(sc.eventID)}>Remove</Button>
                   </GridColumn>
                 </GridRow>
               </Grid>
