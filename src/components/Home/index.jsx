@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/userContext'
 import {
   Container,
@@ -16,6 +17,7 @@ import {
   MessageHeader,
 } from 'semantic-ui-react'
 import dayjs from 'dayjs'
+import CreateEventModal from '../../modals/CreateEventModal'
 
 const Home = () => {
   const { user, logout } = useUser()
@@ -27,6 +29,11 @@ const Home = () => {
   const [dateNow, setDateNow] = useState('')
   // this week
   const [calDays, setCalDays] = useState([])
+  // modal
+  const [openCreateModal, setOpenCreateModal] = useState(false)
+  const [selectedDayForModal, setSelectedDayForModal] = useState()
+
+  const navigate = useNavigate()
 
   // today style
   const todayMark = {
@@ -131,6 +138,8 @@ const Home = () => {
     }, 500)
   }
 
+  const handleCloseModal = () => setOpenCreateModal(false)
+
   return (
     <Container>
       <Header style={{ textAlign: 'center', padding: '2rem 0' }}>
@@ -179,25 +188,74 @@ const Home = () => {
         <TableBody>
           <TableRow>
             <TableCell>
-              <Button>Dodaj</Button>
+              <Button
+                onClick={() => {
+                  setOpenCreateModal(true)
+                  setSelectedDayForModal(calDays[0])
+                }}
+              >
+                Dodaj
+              </Button>
             </TableCell>
             <TableCell>
-              <Button>Dodaj</Button>
+              <Button
+                onClick={() => {
+                  setOpenCreateModal(true)
+                  setSelectedDayForModal(calDays[1])
+                }}
+              >
+                Dodaj
+              </Button>
             </TableCell>
             <TableCell>
-              <Button>Dodaj</Button>
+              <Button
+                onClick={() => {
+                  setOpenCreateModal(true)
+                  setSelectedDayForModal(calDays[2])
+                }}
+              >
+                Dodaj
+              </Button>
             </TableCell>
             <TableCell>
-              <Button>Dodaj</Button>
+              <Button
+                onClick={() => {
+                  setOpenCreateModal(true)
+                  setSelectedDayForModal(calDays[3])
+                }}
+              >
+                Dodaj
+              </Button>
             </TableCell>
             <TableCell>
-              <Button>Dodaj</Button>
+              <Button
+                onClick={() => {
+                  setOpenCreateModal(true)
+                  setSelectedDayForModal(calDays[4])
+                }}
+              >
+                Dodaj
+              </Button>
             </TableCell>
             <TableCell>
-              <Button>Dodaj</Button>
+              <Button
+                onClick={() => {
+                  setOpenCreateModal(true)
+                  setSelectedDayForModal(calDays[5])
+                }}
+              >
+                Dodaj
+              </Button>
             </TableCell>
             <TableCell>
-              <Button>Dodaj</Button>
+              <Button
+                onClick={() => {
+                  setOpenCreateModal(true)
+                  setSelectedDayForModal(calDays[6])
+                }}
+              >
+                Dodaj
+              </Button>
             </TableCell>
           </TableRow>
         </TableBody>
@@ -213,25 +271,25 @@ const Home = () => {
           </TableRow>
           <TableRow>
             <TableCell>
-              <Button>Kreiraj/edituj sablon za sve ponedeljke</Button>
+              <Button onClick={() => navigate(`/upsert-schedule/0`)}>Kreiraj/edituj sablon za sve ponedeljke</Button>
             </TableCell>
             <TableCell>
-              <Button>Kreiraj/edituj sablon za sve utorke</Button>
+              <Button onClick={() => navigate(`/upsert-schedule/${1}`)}>Kreiraj/edituj sablon za sve utorke</Button>
             </TableCell>
             <TableCell>
-              <Button>Kreiraj/edituj sablon za sve srede</Button>
+              <Button onClick={() => navigate(`/upsert-schedule/${2}`)}>Kreiraj/edituj sablon za sve srede</Button>
             </TableCell>
             <TableCell>
-              <Button>Kreiraj/edituj sablon za sve cetvrtke</Button>
+              <Button onClick={() => navigate(`/upsert-schedule/${3}`)}>Kreiraj/edituj sablon za sve cetvrtke</Button>
             </TableCell>
             <TableCell>
-              <Button>Kreiraj/edituj sablon za sve petke</Button>
+              <Button onClick={() => navigate(`/upsert-schedule/${4}`)}>Kreiraj/edituj sablon za sve petke</Button>
             </TableCell>
             <TableCell>
-              <Button>Kreiraj/edituj sablon za sve subote</Button>
+              <Button onClick={() => navigate(`/upsert-schedule/${5}`)}>Kreiraj/edituj sablon za sve subote</Button>
             </TableCell>
             <TableCell>
-              <Button>Kreiraj/edituj sablon za sve nedelje</Button>
+              <Button onClick={() => navigate(`/upsert-schedule/${6}`)}>Kreiraj/edituj sablon za sve nedelje</Button>
             </TableCell>
           </TableRow>
           <TableRow>
@@ -308,6 +366,7 @@ const Home = () => {
           </TableRow>
         </TableFooter>
       </Table>
+      <CreateEventModal open={openCreateModal} closeModal={handleCloseModal} selectedDayForModal={selectedDayForModal} />
     </Container>
   )
 }

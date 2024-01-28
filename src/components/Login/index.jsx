@@ -26,10 +26,17 @@ const Login = () => {
         style={{
           height: 'calc(100vh)',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
+        <Message negative>
+          <MessageHeader>{`* Koristite isti email i isti password kao na zvanicnoj platformi (Concordsoft Office Dashboard)!!!`}</MessageHeader>
+        </Message>
+        <br />
+        <br />
+        <br />
         <Form onSubmit={handleLogin}>
           <FormGroup>
             <FormInput style={{ minWidth: '350px', marginBottom: '1rem' }} fluid label='Email' type='email' placeholder='Your email' />
