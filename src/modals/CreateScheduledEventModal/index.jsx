@@ -19,15 +19,20 @@ import {
 import { useUser } from '../../context/userContext'
 import axios from 'axios'
 
-const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clients }) => {
+const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clients, schedule }) => {
   const [selectClientOptions, setSelectClientOptions] = useState([])
   const [formData, setFormData] = useState({})
   const { token } = useUser()
 
   useEffect(() => {
     if (selectedDayForModal) {
-      // reset/set states on load
-      setFormData({})
+      if (schedule) {
+        // edit
+        setFormData(schedule)
+      } else {
+        // new -> reset
+        setFormData({})
+      }
     }
   }, [selectedDayForModal])
 
@@ -118,7 +123,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
     minutesOptions.push({
       key: `minute-${i}`,
       value: i,
-      text: `${i}`,
+      text: `${i < 10 ? '0' + i : i}`,
     })
   }
 
@@ -140,8 +145,12 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
       (formData.uhours || formData.umins) &&
       (formData.eshours || formData.esmins)
     ) {
+      let data = { formData, selectedDayForModal }
+      if (schedule) {
+        data.eventID = schedule.eventID
+      }
       axios
-        .post('http://localhost:5000/api/upsert-defaults', { formData, selectedDayForModal })
+        .post('http://localhost:5000/api/upsert-defaults', { ...data })
         .then((response) => {
           if (response?.data) {
             console.log(response.data)
@@ -163,7 +172,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
   return (
     <Modal onClose={() => closeModal()} open={open}>
       <ModalHeader>
-        Dodaj unos za sablon za <i>{dayNames[selectedDayForModal]}</i>
+        {schedule ? 'Edituj' : 'Dodaj'} unos za sablon za <i>{dayNames[selectedDayForModal]}</i>
       </ModalHeader>
       <ModalContent style={{ padding: '10px' }}>
         <Grid celled>
@@ -173,6 +182,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
               <Select
                 name='project'
                 options={selectClientOptions}
+                defaultValue={schedule ? schedule.project : null}
                 placeholder='Select Project'
                 onChange={(e, { name, value }) => handleChange({ name, value })}
                 search
@@ -183,6 +193,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
               <Select
                 name='task'
                 options={taskOptions}
+                defaultValue={schedule ? schedule.task : null}
                 placeholder='Select Task'
                 onChange={(e, { name, value }) => handleChange({ name, value })}
                 search
@@ -196,6 +207,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
                 placeholder='opis'
                 style={{ width: '400px', height: '150px' }}
                 name='description'
+                defaultValue={schedule ? schedule.description : ''}
                 onChange={(e, { name, value }) => handleChange({ name, value })}
               />
             </GridColumn>
@@ -205,7 +217,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
                 options={hoursOptions}
                 search
                 compact
-                defaultValue={hoursOptions[0].value}
+                defaultValue={schedule && schedule.uhours ? schedule.uhours : hoursOptions[0].value}
                 name='uhours'
                 onChange={(e, { name, value }) => handleChange({ name, value })}
               />{' '}
@@ -214,7 +226,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
                 options={minutesOptions}
                 search
                 compact
-                defaultValue={minutesOptions[0].value}
+                defaultValue={schedule && schedule.umins ? schedule.umins : minutesOptions[0].value}
                 name='umins'
                 onChange={(e, { name, value }) => handleChange({ name, value })}
               />
@@ -223,7 +235,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
                 options={hoursOptions}
                 search
                 compact
-                defaultValue={hoursOptions[0].value}
+                defaultValue={schedule && schedule.eshours ? schedule.eshours : hoursOptions[0].value}
                 name='eshours'
                 onChange={(e, { name, value }) => handleChange({ name, value })}
               />{' '}
@@ -232,7 +244,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
                 options={minutesOptions}
                 search
                 compact
-                defaultValue={minutesOptions[0].value}
+                defaultValue={schedule && schedule.esmins ? schedule.esmins : minutesOptions[0].value}
                 name='esmins'
                 onChange={(e, { name, value }) => handleChange({ name, value })}
               />

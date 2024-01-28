@@ -13,13 +13,17 @@ const Upsert = (props) => {
   const [savedSchedules, setSavedSchedules] = useState([])
   const [clients, setClients] = useState()
   const [summedHours, setSummedHours] = useState('')
+  const [schedule, setSchedule] = useState()
 
   const dayNames = ['ponedeljak', 'utorak', 'sreda', 'cetvrtak', 'petak', 'subota', 'nedelja']
   let currentDayNumber = location.pathname.split('/')
   currentDayNumber = currentDayNumber[currentDayNumber.length - 1]
   const currentDayName = dayNames[currentDayNumber]
 
-  const handleCloseModal = () => setOpenCreateModal(false)
+  const handleCloseModal = () => {
+    setOpenCreateModal(false)
+    setSchedule(null)
+  }
 
   // get clients
   useMemo(() => {
@@ -27,7 +31,6 @@ const Upsert = (props) => {
       .get('http://localhost:5000/api/clients')
       .then((resp) => {
         if (resp?.data?.clients) {
-          console.log(resp.data.clients)
           setClients(resp.data.clients)
         }
       })
@@ -77,7 +80,12 @@ const Upsert = (props) => {
   }
 
   // edit an event
-  const handleEditEvent = (id) => {}
+  const handleEditEvent = (id) => {
+    setSchedule(savedSchedules.find((s) => s.eventID === id))
+    setTimeout(() => {
+      setOpenCreateModal(true)
+    }, 500)
+  }
 
   // additional styles
   const smallRowStyle = { padding: '0.5rem 0' }
@@ -184,7 +192,13 @@ const Upsert = (props) => {
           </Button>
         </Segment>
       </Container>
-      <CreateScheduledEventModal open={openCreateModal} closeModal={handleCloseModal} selectedDayForModal={currentDayNumber} clients={clients} />
+      <CreateScheduledEventModal
+        open={openCreateModal}
+        closeModal={handleCloseModal}
+        selectedDayForModal={currentDayNumber}
+        clients={clients}
+        schedule={schedule}
+      />
     </div>
   )
 }
