@@ -28,7 +28,7 @@ const Home = () => {
   // day in week
   const [todayDay, setTodayDay] = useState(7)
   // refined today format
-  const [dateNow, setDateNow] = useState('')
+  const [dateNow, setDateNow] = useState(dayjs())
   // this week
   const [calDays, setCalDays] = useState([])
   // modal
@@ -85,15 +85,14 @@ const Home = () => {
       })
   }, [])
 
-  useMemo(() => {
+  useEffect(() => {
     // get day
-    let today = dayjs()
+    let today = dateNow
     // set today day in week
     let todayDayNameNumber = dayjs().day()
     setTodayDay(todayDayNameNumber)
     // set today date
     let todayDate = today.format('DD. MMM YYYY.')
-    setDateNow(todayDate)
     // set week
     switch (todayDayNameNumber) {
       case 1:
@@ -174,7 +173,7 @@ const Home = () => {
         ])
         break
     }
-  }, [])
+  }, [dateNow])
 
   const handleLogout = () => {
     logout()
@@ -184,6 +183,17 @@ const Home = () => {
   }
 
   const handleCloseModal = () => setOpenCreateModal(false)
+
+  // handle date change
+  const handleSetOneWeekLess = () => {
+    setDateNow((prev) => dayjs(prev).subtract(7, 'days'))
+  }
+  const handlesetOneWeekMore = () => {
+    setDateNow((prev) => dayjs(prev).add(7, 'days'))
+  }
+  const handleSetToday = () => {
+    setDateNow((prev) => dayjs())
+  }
 
   return (
     <Container>
@@ -201,9 +211,9 @@ const Home = () => {
           {`* Svaki edit direktno na ovom kalendaru je privremen za taj dan konkretno`}
         </MessageHeader>
       </Message>
-      <Button>{`<`}</Button>
-      <Button>Today</Button>
-      <Button>{`>`}</Button>
+      <Button onClick={handleSetOneWeekLess}>{`<`}</Button>
+      <Button onClick={handleSetToday}>Today</Button>
+      <Button onClick={handlesetOneWeekMore}>{`>`}</Button>
       <Table celled fixed>
         <TableHeader>
           <TableRow>
@@ -282,8 +292,8 @@ const Home = () => {
                   </Button>
                   {sc &&
                     sc.length > 0 &&
-                    sc.map((ev) => (
-                      <>
+                    sc.map((ev, i) => (
+                      <div key={i}>
                         <hr />
                         <p>Projekat: </p>
                         <p>
@@ -317,7 +327,7 @@ const Home = () => {
                         </p>
                         <Button size='mini'>Edit</Button>
                         <Button size='mini'>Remove</Button>
-                      </>
+                      </div>
                     ))}
                 </TableCell>
               ))}
