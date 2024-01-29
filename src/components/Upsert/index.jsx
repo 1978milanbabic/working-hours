@@ -52,13 +52,12 @@ const Upsert = (props) => {
             setSavedSchedules(saved)
             // calulate summed hours
             if (saved && saved.length > 0) {
-              let hoursSum = 0
-              let minsSum = 0
+              let timeSum = 0
               saved.forEach((s) => {
-                if (s.uhours) hoursSum += s.uhours
-                if (s.umins) minsSum += s.umins
+                if (s.uhours) timeSum += s.uhours * 60
+                if (s.umins) timeSum += s.umins
               })
-              setSummedHours(`${hoursSum} : ${minsSum < 10 ? '0' + minsSum : minsSum}`)
+              setSummedHours(`${parseInt(timeSum / 60)} : ${timeSum % 60 < 10 ? '0' + (timeSum % 60) : timeSum % 60}`)
             } else {
               setSummedHours(`0 : 00`)
             }

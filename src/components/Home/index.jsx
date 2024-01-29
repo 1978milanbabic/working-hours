@@ -17,12 +17,21 @@ import {
   MessageHeader,
 } from 'semantic-ui-react'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+import advanced from 'dayjs/plugin/advancedFormat'
 import CreateEventModal from '../../modals/CreateEventModal'
 import axios from 'axios'
 import './Home.css'
 
+// dayjs setup
+dayjs.extend(timezone)
+dayjs.extend(utc)
+dayjs.extend(advanced)
+dayjs.tz.setDefault('Europe/London')
+
 const Home = () => {
-  const { user, logout } = useUser()
+  const { user, logout, token } = useUser()
   // dateys today raw format
   const [rawToday, setRawToday] = useState(dayjs())
   // day in week
@@ -195,6 +204,43 @@ const Home = () => {
     setDateNow((prev) => dayjs())
   }
 
+  // submit all
+  const handleSubmitAll = (aDate, dayNmb) => {
+    // set timezone for isoString to 00:00 => dayjs(aDate).add(1, 'hours').toISOString()
+    let theDate = dayjs(aDate).add(1, 'hours').toISOString()
+    // list all schedules
+    if (schedules[dayNmb]?.length > 0) {
+      schedules[dayNmb].forEach((sc) => {
+        let sendObj = {
+          // project
+          clientID: sc.project,
+          clientName: clients.find((cli) => cli['_id'] === sc.project).firstName,
+          //date
+          date: theDate,
+          // developer (full name)
+          developerID: user['_id'],
+          developerName: user.firstName + ' ' + user.lastName,
+          // specifics
+          description: sc.description,
+          estTime: sc.estTime,
+          time: sc.time,
+          task: sc.task,
+        }
+        // send request
+        axios
+          .post('http://localhost:5000/api/create-day-entrance', { sendObj, token })
+          .then((response) => {
+            if (response?.data) {
+              console.log(response.data)
+            }
+          })
+          .catch((error) => {
+            console.error(error)
+          })
+      })
+    }
+  }
+
   return (
     <Container>
       <Header style={{ textAlign: 'center', padding: '2rem 0' }}>
@@ -298,7 +344,7 @@ const Home = () => {
                         <p>Projekat: </p>
                         <p>
                           <em>
-                            <strong>{clients.find((cli) => cli['_id'] === ev.project).firstName}</strong>
+                            <strong>{clients && clients.find((cli) => cli['_id'] === ev.project).firstName}</strong>
                           </em>
                         </p>
                         <p>Task:</p>
@@ -347,7 +393,7 @@ const Home = () => {
             <TableCell>
               <Button
                 onClick={() => {
-                  console.log(dayjs(calDays[0]))
+                  handleSubmitAll(dayjs(calDays[0]), 0)
                 }}
                 primary
               >
@@ -357,7 +403,7 @@ const Home = () => {
             <TableCell>
               <Button
                 onClick={() => {
-                  console.log(dayjs(calDays[1]))
+                  handleSubmitAll(dayjs(calDays[1]), 1)
                 }}
                 primary
               >
@@ -367,7 +413,7 @@ const Home = () => {
             <TableCell>
               <Button
                 onClick={() => {
-                  console.log(dayjs(calDays[2]))
+                  handleSubmitAll(dayjs(calDays[2]), 2)
                 }}
                 primary
               >
@@ -377,7 +423,7 @@ const Home = () => {
             <TableCell>
               <Button
                 onClick={() => {
-                  console.log(dayjs(calDays[3]))
+                  handleSubmitAll(dayjs(calDays[3]), 3)
                 }}
                 primary
               >
@@ -387,7 +433,7 @@ const Home = () => {
             <TableCell>
               <Button
                 onClick={() => {
-                  console.log(dayjs(calDays[4]))
+                  handleSubmitAll(dayjs(calDays[4]), 4)
                 }}
                 primary
               >
@@ -397,7 +443,7 @@ const Home = () => {
             <TableCell>
               <Button
                 onClick={() => {
-                  console.log(dayjs(calDays[5]))
+                  handleSubmitAll(dayjs(calDays[5]), 5)
                 }}
                 primary
               >
@@ -407,7 +453,7 @@ const Home = () => {
             <TableCell>
               <Button
                 onClick={() => {
-                  console.log(dayjs(calDays[6]))
+                  handleSubmitAll(dayjs(calDays[6]), 6)
                 }}
                 primary
               >
