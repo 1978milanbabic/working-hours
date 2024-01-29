@@ -58,7 +58,6 @@ const Upsert = (props) => {
                 if (s.uhours) hoursSum += s.uhours
                 if (s.umins) minsSum += s.umins
               })
-              console.log(hoursSum, ' : ', minsSum)
               setSummedHours(`${hoursSum} : ${minsSum < 10 ? '0' + minsSum : minsSum}`)
             } else {
               setSummedHours(`0 : 00`)
@@ -101,8 +100,8 @@ const Upsert = (props) => {
         </Segment>
         {savedSchedules &&
           savedSchedules.length > 0 &&
-          savedSchedules.map((sc) => (
-            <Segment attached key={`schedule-${sc.eventID}`}>
+          savedSchedules.map((sc, scindex) => (
+            <Segment attached key={`schedule-${sc.eventID || scindex}`}>
               <Grid>
                 <GridRow style={smallRowStyle}>
                   <GridColumn width={5}>

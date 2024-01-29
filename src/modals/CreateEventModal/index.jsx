@@ -24,7 +24,7 @@ const CreateEventModal = ({ open, closeModal, selectedDayForModal }) => {
 
   useEffect(() => {
     if (selectedDayForModal) {
-      console.log('🚀 -> useEffect -> selectedDayForModal:\n\r', selectedDayForModal)
+      // console.log('🚀 -> useEffect -> selectedDayForModal:\n\r', selectedDayForModal)
     }
   }, [selectedDayForModal])
 
@@ -44,7 +44,6 @@ const CreateEventModal = ({ open, closeModal, selectedDayForModal }) => {
 
   useEffect(() => {
     if (clients && clients.length > 0) {
-      console.log(clients)
       setSelectClientOptions(
         clients.map((cli) => {
           return {

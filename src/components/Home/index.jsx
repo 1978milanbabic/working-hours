@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/userContext'
 import {
@@ -18,6 +18,8 @@ import {
 } from 'semantic-ui-react'
 import dayjs from 'dayjs'
 import CreateEventModal from '../../modals/CreateEventModal'
+import axios from 'axios'
+import './Home.css'
 
 const Home = () => {
   const { user, logout } = useUser()
@@ -32,6 +34,12 @@ const Home = () => {
   // modal
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [selectedDayForModal, setSelectedDayForModal] = useState()
+  // schedules
+  const [schedules, setSchedules] = useState()
+  // clients/projects
+  const [clients, setClients] = useState()
+  // sum time
+  const [sumTime, setSumtime] = useState([0, 0, 0, 0, 0, 0, 0])
 
   const navigate = useNavigate()
 
@@ -39,6 +47,43 @@ const Home = () => {
   const todayMark = {
     backgroundColor: '#b3d1ff',
   }
+
+  // get clients
+  useMemo(() => {
+    axios
+      .get('http://localhost:5000/api/clients')
+      .then((resp) => {
+        if (resp?.data?.clients) {
+          setClients(resp.data.clients)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
+
+  // get all schedules
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/defaults')
+      .then((resp) => {
+        if (resp?.data?.schedules) {
+          let scs = resp.data.schedules
+          let newSumTimes = [0, 0, 0, 0, 0, 0, 0]
+          scs.forEach((s, index) => {
+            s.forEach((ins) => {
+              newSumTimes[index] += ins.uhours ? ins.uhours * 60 : 0
+              newSumTimes[index] += ins.umins ? ins.umins : 0
+            })
+          })
+          setSumtime(newSumTimes)
+          setSchedules(scs)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
 
   useMemo(() => {
     // get day
@@ -188,89 +233,6 @@ const Home = () => {
         <TableBody>
           <TableRow>
             <TableCell>
-              <Button
-                onClick={() => {
-                  setOpenCreateModal(true)
-                  setSelectedDayForModal(calDays[0])
-                }}
-              >
-                Dodaj
-              </Button>
-            </TableCell>
-            <TableCell>
-              <Button
-                onClick={() => {
-                  setOpenCreateModal(true)
-                  setSelectedDayForModal(calDays[1])
-                }}
-              >
-                Dodaj
-              </Button>
-            </TableCell>
-            <TableCell>
-              <Button
-                onClick={() => {
-                  setOpenCreateModal(true)
-                  setSelectedDayForModal(calDays[2])
-                }}
-              >
-                Dodaj
-              </Button>
-            </TableCell>
-            <TableCell>
-              <Button
-                onClick={() => {
-                  setOpenCreateModal(true)
-                  setSelectedDayForModal(calDays[3])
-                }}
-              >
-                Dodaj
-              </Button>
-            </TableCell>
-            <TableCell>
-              <Button
-                onClick={() => {
-                  setOpenCreateModal(true)
-                  setSelectedDayForModal(calDays[4])
-                }}
-              >
-                Dodaj
-              </Button>
-            </TableCell>
-            <TableCell>
-              <Button
-                onClick={() => {
-                  setOpenCreateModal(true)
-                  setSelectedDayForModal(calDays[5])
-                }}
-              >
-                Dodaj
-              </Button>
-            </TableCell>
-            <TableCell>
-              <Button
-                onClick={() => {
-                  setOpenCreateModal(true)
-                  setSelectedDayForModal(calDays[6])
-                }}
-              >
-                Dodaj
-              </Button>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell>Ukupno sati: {`0: 00`}</TableCell>
-            <TableCell>Ukupno sati: {`0: 00`}</TableCell>
-            <TableCell>Ukupno sati: {`0: 00`}</TableCell>
-            <TableCell>Ukupno sati: {`0: 00`}</TableCell>
-            <TableCell>Ukupno sati: {`0: 00`}</TableCell>
-            <TableCell>Ukupno sati: {`0: 00`}</TableCell>
-            <TableCell>Ukupno sati: {`0: 00`}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
               <Button onClick={() => navigate(`/upsert-schedule/0`)}>Kreiraj/edituj sablon za sve ponedeljke</Button>
             </TableCell>
             <TableCell>
@@ -291,6 +253,85 @@ const Home = () => {
             <TableCell>
               <Button onClick={() => navigate(`/upsert-schedule/${6}`)}>Kreiraj/edituj sablon za sve nedelje</Button>
             </TableCell>
+          </TableRow>
+          <TableRow style={{ backgroundColor: 'rgb(240, 243, 250)' }}>
+            {schedules &&
+              schedules.map((sc, index) => (
+                <TableCell key={index} className='home-day'>
+                  <Button
+                    primary
+                    size='mini'
+                    onClick={() => {
+                      setOpenCreateModal(true)
+                      setSelectedDayForModal(calDays[index])
+                    }}
+                  >
+                    Dodaj (samo za ovaj dan)
+                  </Button>
+                  <br />
+                  <Button
+                    size='mini'
+                    style={{ marginTop: '5px' }}
+                    primary
+                    onClick={() => {
+                      // setOpenCreateModal(true)
+                      // setSelectedDayForModal(calDays[index])
+                    }}
+                  >
+                    Resetuj na sablon
+                  </Button>
+                  {sc &&
+                    sc.length > 0 &&
+                    sc.map((ev) => (
+                      <>
+                        <hr />
+                        <p>Projekat: </p>
+                        <p>
+                          <em>
+                            <strong>{clients.find((cli) => cli['_id'] === ev.project).firstName}</strong>
+                          </em>
+                        </p>
+                        <p>Task:</p>
+                        <p>
+                          <em>
+                            <strong>{ev.task}</strong>
+                          </em>
+                        </p>
+                        <p>Opis:</p>
+                        <p>
+                          <em>
+                            <strong>{ev.description}</strong>
+                          </em>
+                        </p>
+                        <p>Utroseno vreme:</p>
+                        <p>
+                          <em>
+                            <strong>
+                              {ev.uhours ? ev.uhours : '0'} : {ev.umins ? (ev.umins < 10 ? '0' + ev.umins : ev.umins) : '00'}
+                            </strong>
+                          </em>
+                        </p>
+                        <p>Estimirano vreme:</p>
+                        <p style={{ color: 'gray' }}>
+                          {ev.eshours ? ev.eshours : '0'} : {ev.esmins ? (ev.esmins < 10 ? '0' + ev.esmins : ev.esmins) : '00'}
+                        </p>
+                        <Button size='mini'>Edit</Button>
+                        <Button size='mini'>Remove</Button>
+                      </>
+                    ))}
+                </TableCell>
+              ))}
+          </TableRow>
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell>Ukupno sati: {`${parseInt(sumTime[0] / 60)} : ${sumTime[0] % 60 < 10 ? '0' + (sumTime[0] % 60) : sumTime[0] % 60}`}</TableCell>
+            <TableCell>Ukupno sati: {`${parseInt(sumTime[1] / 60)} : ${sumTime[1] % 60 < 10 ? '0' + (sumTime[1] % 60) : sumTime[1] % 60}`}</TableCell>
+            <TableCell>Ukupno sati: {`${parseInt(sumTime[2] / 60)} : ${sumTime[2] % 60 < 10 ? '0' + (sumTime[2] % 60) : sumTime[2] % 60}`}</TableCell>
+            <TableCell>Ukupno sati: {`${parseInt(sumTime[3] / 60)} : ${sumTime[3] % 60 < 10 ? '0' + (sumTime[3] % 60) : sumTime[3] % 60}`}</TableCell>
+            <TableCell>Ukupno sati: {`${parseInt(sumTime[4] / 60)} : ${sumTime[4] % 60 < 10 ? '0' + (sumTime[4] % 60) : sumTime[4] % 60}`}</TableCell>
+            <TableCell>Ukupno sati: {`${parseInt(sumTime[5] / 60)} : ${sumTime[5] % 60 < 10 ? '0' + (sumTime[5] % 60) : sumTime[5] % 60}`}</TableCell>
+            <TableCell>Ukupno sati: {`${parseInt(sumTime[6] / 60)} : ${sumTime[6] % 60 < 10 ? '0' + (sumTime[6] % 60) : sumTime[6] % 60}`}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>

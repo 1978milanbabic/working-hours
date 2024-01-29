@@ -34,7 +34,7 @@ const CreateScheduledEventModal = ({ open, closeModal, selectedDayForModal, clie
         setFormData({})
       }
     }
-  }, [selectedDayForModal])
+  }, [selectedDayForModal, schedule])
 
   useEffect(() => {
     if (clients && clients.length > 0) {
